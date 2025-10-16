@@ -7,7 +7,7 @@ It helps users **analyze their spending patterns**, **visualize insights**, and 
 
 ## 🚀 Features
 
-### 🔐 **User Authentication (users.db)**
+### 🔐 **User Authentication**
 - Secure user management handled via **SQLite database (`users.db`)**
 - Passwords are **hashed with bcrypt** using `passlib`
 - Persistent sessions and validation handled by `session_manager.py`
