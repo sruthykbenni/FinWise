@@ -1,123 +1,111 @@
 # 💰 FinWise — AI-Powered Personal Financial Advisor
 
-FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, and **Plotly**.  
-It helps users **analyze their spending patterns**, **visualize financial insights**, and **chat with an AI assistant** that understands both their personal transactions and real-world financial data.
+FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI API**, and **Plotly**.  
+It helps users **analyze their spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources online.
 
 ---
 
 ## 🚀 Features
 
-### 🔐 **User Authentication**
-- Secure login and session management using `passlib` and `SQLAlchemy`
-- Each user has a **personalized financial workspace**
+### 🔐 **User Authentication (users.db)**
+- Secure user management handled via **SQLite database (`users.db`)**
+- Passwords are **hashed with bcrypt** using `passlib`
+- Persistent sessions and validation handled by `session_manager.py`
+- Preloaded with a default demo user for quick login
 
-### 📊 **Interactive Financial Dashboard**
-- Upload your own **transaction CSV file** or use built-in sample data
-- Auto-categorizes expenses and detects income intelligently
-- Provides insights into:
-  - **Monthly spending trends**
-  - **Category-wise breakdown**
-  - **Top merchants**
-  - **Income, Expense, and Net Flow summaries**
-- Dynamic visualizations built using **Plotly**
+### 📊 **Financial Dashboard**
+- Upload your transaction data (CSV) or load a demo dataset
+- Auto-categorizes transactions into meaningful groups (Food, Rent, Salary, Transport, etc.)
+- Calculates **Income, Expense, and Net Flow** dynamically per month
+- Visual insights using **Plotly**:
+  - Monthly spending trends  
+  - Category breakdown  
+  - Top merchants  
 
-### 🧠 **AI Financial Chatbot (RAG-Enabled)**
-- Uses **Retrieval-Augmented Generation (RAG)** with FAISS & Sentence Transformers  
-- Understands both:
+### 🧠 **AI Financial Chatbot (RAG + OpenAI GPT-4)**
+- Built using **LangChain** + **FAISS** + **OpenAI API**
+- Uses **Retrieval-Augmented Generation (RAG)** to ensure factual, data-based responses
+- Understands:
   - Your **uploaded transaction data**
-  - **External financial documents** (seeded from credible public finance resources)
-- Provides meaningful, data-grounded answers like:
+  - **Seeded financial documents** (e.g., RBI guidelines, investment guides, personal finance best practices)
+- Example queries:
   > “What were my biggest expenses last month?”  
-  > “How can I save more based on my current spending pattern?”  
-  > “Summarize my spending on transport this quarter.”
+  > “Summarize my income vs expenses this quarter.”  
+  > “How can I save more based on my transaction patterns?”  
+  > “Explain what mutual funds are, based on RBI/SEBI guidelines.”
 
-### 🗃️ **Smart Data Ingestion**
-- Automatically parses transaction data in various formats  
-  (e.g., Debit/Credit columns, unsigned Amounts, or different date formats)
-- Integrates seamlessly into the RAG knowledge base
+### 🗃️ **Smart Data Handling**
+- Works with various bank export formats (Debit/Credit, Amount-only, etc.)
+- Automatically detects date and amount columns
+- Categorizes expenses and incomes intelligently
 
-### 💡 **Tech Stack**
-| Layer | Tools & Libraries |
-|--------|-------------------|
-| **Frontend** | Streamlit |
-| **Backend Logic** | Python 3.11+, FastAPI (optional microservices) |
-| **Database** | SQLite (via SQLAlchemy) |
-| **Visualization** | Plotly |
-| **AI/LLM** | LangChain + Sentence Transformers (`all-MiniLM-L6-v2`) |
-| **Vector DB** | FAISS |
-| **Authentication** | Passlib (bcrypt) |
-| **Document Parsing** | PDFPlumber, Pandas |
-| **Deployment** | Streamlit Cloud / Localhost |
+### 🧮 **Visualization & Insights**
+- Beautiful Plotly dashboards  
+- Real-time calculations for monthly insights  
+- Trendline comparison between months
 
 ---
 
-## 🧩 Folder Structure
+## 🧠 **Architecture Overview**
 
 ```
-
-FinWise/
-│
-├── app.py                         # Streamlit main entry
-├── requirements.txt               # Dependencies
-│
-├── data/
-│   └── sample_transactions.csv    # Example dataset for demo
-│
-├── pages/
-│   ├── 1_Dashboard.py             # Financial insights & charts
-│   ├── 2_Chatbot.py               # AI chatbot interface
-│   └── 3_Profile.py               # User reports & summaries
-│
-├── utils/
-│   ├── auth.py                    # User login & authentication
-│   ├── session_manager.py         # Session validation
-│   ├── preprocessing.py           # Data cleaning & categorization
-│   ├── analysis.py                # Spend, category, merchant analytics
-│   ├── plotly_charts.py           # Plotly visualization helpers
-│   ├── rag_setup.py               # RAG vector DB & embedding setup
-│
-└── rag/
-├── seed_docs/                 # Seeded reference documents
-└── vector_index.faiss         # Vector index file
-
-````
+              ┌─────────────────────────────────┐
+              │      User Transaction Data      │
+              └──────────────┬──────────────────┘
+                             │
+                Preprocessing & Categorization
+                             │
+           ┌───────────────────────────────────────┐
+           │ FAISS Vector Store (Local Embeddings) │
+           └───────────────────────────────────────┘
+                             │
+                        RAG Retriever
+                             │
+                     Context Sent to LLM
+                             │
+              ┌────────────────────────────────┐
+              │  OpenAI GPT-4 (via LangChain)  │
+              └────────────────────────────────┘
+                             │
+                      Smart AI Response
+```
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ **Installation & Setup**
 
-### 1️⃣ **Clone the Repository**
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/<your-username>/FinWise.git
 cd FinWise
 ````
 
-### 2️⃣ **Create a Virtual Environment**
+### 2️⃣ Create and Activate Virtual Environment
 
 ```bash
 python -m venv .venv
+.venv\Scripts\activate       # Windows
+# or
+source .venv/bin/activate    # macOS/Linux
 ```
 
-### 3️⃣ **Activate the Environment**
-
-* On Windows:
-
-  ```bash
-  .venv\Scripts\activate
-  ```
-* On macOS/Linux:
-
-  ```bash
-  source .venv/bin/activate
-  ```
-
-### 4️⃣ **Install Dependencies**
+### 3️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5️⃣ **Initialize the Database**
+### 4️⃣ Add Your OpenAI API Key
+
+Create a `.env` file in the project root and add:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+You can get your API key from [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+
+### 5️⃣ Initialize the User Database
 
 ```bash
 python - <<'PY'
@@ -127,109 +115,118 @@ create_user("demo_user", "DemoPass123")
 print("✅ demo_user created successfully!")
 PY
 ```
+This creates:
+- A SQLite database file: users.db
+- A users table with hashed passwords and session support
 
-### 6️⃣ **Run the Application**
+### 6️⃣ Run the App
 
 ```bash
 streamlit run app.py
 ```
 
-### 7️⃣ **Login and Explore**
+Then log in using:
 
 * Username: `demo_user`
 * Password: `DemoPass123`
 
 ---
 
-## 🧠 RAG Chatbot Data Flow
+## 🧩 Folder Structure
 
-1. **User uploads financial data (CSV)**
-   → Preprocessed & vectorized via `SentenceTransformer`.
-2. **FAISS Index** stores embeddings locally.
-3. **LLM (via LangChain)** retrieves top-k context snippets.
-4. **Response generated** by combining user data + retrieved knowledge.
-
-This ensures **context-aware, personalized financial insights** without relying solely on the model’s memory.
-
----
-
-## 📈 Example Insights
-
-| Query                                                 | AI Response (Example)                                                                   |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| *“What’s my biggest expense this month?”*             | “Your largest expense was ₹4,500 at Amazon on Sept 12.”                                 |
-| *“Summarize my entertainment spending this quarter.”* | “You spent ₹2,850 on entertainment including Netflix and movie tickets.”                |
-| *“How can I optimize my travel expenses?”*            | “Consider reducing Ola and Uber rides; 18% of your total expense comes from transport.” |
-
----
-
-## 🧮 Sample Transaction Format
-
-| Date       | Description          | Amount | Category      |
-| ---------- | -------------------- | ------ | ------------- |
-| 2025-09-01 | ACME Ltd Salary      | 25000  | Income        |
-| 2025-09-02 | Uber Trip            | 250    | Transport     |
-| 2025-09-03 | Supermarket ABC      | 650    | Groceries     |
-| 2025-09-04 | Netflix Subscription | 499    | Entertainment |
-
----
-
-## 🧠 LLMs & AI Integration
-
-* Embedding Model: `sentence-transformers/all-MiniLM-L6-v2`
-* Retrieval Engine: FAISS (local)
-* LLM Options:
-
-  * **Default:** HuggingFace LLM (no external API)
-  * **Optional:** OpenAI GPT-4 / Gemini via LangChain integration
-* RAG pipeline ensures factual, grounded answers using:
-
-  * User’s transaction summaries
-  * Seeded credible financial documents
+```
+FinWise/
+│
+├── app.py                         # Main Streamlit entry
+├── requirements.txt               # Dependencies
+├── .env                           # Stores OpenAI API Key
+│
+├── pages/
+│   ├── 1_Dashboard.py             # Analytics dashboard
+│   ├── 2_Chatbot.py               # Chatbot interface
+│   └── 3_Profile.py               # User summary page
+│
+├── utils/
+│   ├── auth.py                    # Authentication
+│   ├── session_manager.py         # Session validation
+│   ├── preprocessing.py           # Data cleaning
+│   ├── analysis.py                # Financial calculations
+│   ├── plotly_charts.py           # Charts and visuals
+│   ├── rag_setup.py               # RAG embedding + retrieval
+│
+├── vector_index.faiss             # FAISS index file
+├── index_meta.pkl                 # Metadata for RAG
+│
+└── data/
+    ├── sample_transactions.csv    # Example dataset
+    └── seed_docs/                 # Standard financial references
+```
 
 ---
 
-## 🌐 Deployment
+## 🧠 **RAG + OpenAI Integration Details**
 
-You can deploy FinWise on:
+* **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2`
+* **Vector Database**: FAISS (in-memory index)
+* **LLM Backend**: OpenAI GPT-4 via LangChain
+* **Retriever Chain**: Context-aware querying from both user and reference data
 
-* **Streamlit Cloud** *(recommended for simplicity)*
-* **Render / Railway / Hugging Face Spaces**
-* Or a self-hosted VPS with FastAPI backend integration
+This setup ensures:
+
+* Reliable, **fact-grounded answers**
+* Personalized responses using **your financial history**
+* Support for **financial advice, summaries, and planning**
+
+---
+
+## 📈 Example Queries
+
+| User Query                                                | Example AI Response                                                                                                                                 |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| “Summarize my income and expense for September.”          | “You earned ₹25,000 and spent ₹18,400, resulting in a net savings of ₹6,600.”                                                                       |
+| “What are my top 3 spending categories?”                  | “Food & Dining (35%), Transport (22%), and Groceries (18%).”                                                                                        |
+| “Explain SIP investments using reliable finance sources.” | “A Systematic Investment Plan (SIP) allows you to invest in mutual funds periodically. It helps with rupee cost averaging, as per SEBI guidelines.” |
+
+---
+
+## 🌐 Deployment Options
+
+* [Streamlit Cloud](https://streamlit.io/cloud)
+* Render / Railway / Hugging Face Spaces
+* Self-hosted on VPS with `uvicorn` + FastAPI microservices (optional)
 
 ---
 
 ## 📚 Future Enhancements
 
-✅ Integration with bank APIs (Yodlee / Plaid)
-✅ Expense forecasting using Prophet or LSTM
-✅ Goal-based savings planner
-✅ Multi-user analytics dashboard for CSR / corporate use
-✅ PDF bank statement ingestion with auto-OCR
+✅ Integration with live banking APIs (Plaid / Yodlee)
+✅ Expense forecasting using ML models (Prophet / LSTM)
+✅ Voice-based financial assistant
+✅ PDF bank statement auto-parsing
+✅ Investment portfolio optimization module
 
 ---
 
 ## 🧑‍💻 Author
 
-**👩‍💻 Sruthy K Benni**
-Passionate about AI and Data Science ⭐
-[LinkedIn](https://www.linkedin.com/in/sruthy-k-benni) 
+👩‍💻 Sruthy K Benni
+[LinkedIn](https://www.linkedin.com/in/sruthy-k-benni)
 
 ---
 
 ## 🪪 License
 
-This project is licensed under the **MIT License** — feel free to use and modify it for personal or academic purposes.
+This project is licensed under the **MIT License** — free for personal, research, and educational use.
 
 ---
 
 ## 🌟 Acknowledgments
 
-* [Streamlit](https://streamlit.io)
+* [OpenAI API](https://platform.openai.com/)
 * [LangChain](https://www.langchain.com/)
 * [Sentence Transformers](https://www.sbert.net/)
-* [Plotly](https://plotly.com/python/)
 * [FAISS](https://github.com/facebookresearch/faiss)
+* [Streamlit](https://streamlit.io)
+* [Plotly](https://plotly.com/python/)
 
 ---
-
