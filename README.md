@@ -3,6 +3,8 @@
 FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI API**, and **Plotly**.  
 It helps users **analyze their spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources online.
 
+🔗 Live Demo: [click here](https://finwise-genai.streamlit.app/)  
+
 ---
 
 ## 🚀 Features
