@@ -1,0 +1,11 @@
+Title: Manual of Finance & Accounts (Public Sector)
+
+This manual outlines guidelines for public financial administration in central government operations:
+- Principles of financial propriety: no one should sanction expenditure for advantage to oneself.  
+- Budget procedures: allocations, reappropriations, supplementary grants.  
+- Cash management: cash balances, investment of idle funds, reporting.  
+- Accounting entries: accrual vs cash basis, classification of receipts and expenditures.  
+- Maintenance of funds and suspense accounts.  
+- Compliance with GFR, auditing norms, and statutory disclosures.
+
+Based on publicly released manual of finance & accounts (CBSE / Government) :contentReference[oaicite:2]{index=2}

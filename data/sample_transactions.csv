@@ -1,0 +1,17 @@
+Date,TransactionID,Account,Type,Description,Counterparty,Category,Amount,Currency,Balance
+2025-09-01,TXN0001,Checking,Debit,Supermarket ABC,ABC Supermarket,grocery,-45.12,INR,9954.88
+2025-09-02,TXN0002,Checking,Debit,Uber Ride,Uber India,transport,-12.50,INR,9942.38
+2025-09-03,TXN0003,Checking,Credit,Salary from ACME,ACME Corp,income,2500.00,INR,12442.38
+2025-09-05,TXN0004,Checking,Debit,Restaurant XYZ,Restaurant XYZ,dining,-30.00,INR,12412.38
+2025-09-06,TXN0005,Checking,Debit,Electricity Bill,TNEB Utilities,utilities,-80.57,INR,12331.81
+2025-09-07,TXN0006,Checking,Debit,Movie Tickets,PVR Cinemas,entertainment,-15.00,INR,12316.81
+2025-09-08,TXN0007,Checking,Debit,Mobile Recharge,Jio Payments,telecom,-10.00,INR,12306.81
+2025-09-10,TXN0008,Checking,Debit,Amazon Purchase,Amazon India,shopping,-120.75,INR,12186.06
+2025-09-12,TXN0009,Checking,Credit,Interest Credited,State Bank,income,5.25,INR,12191.31
+2025-09-15,TXN0010,Checking,Debit,Rent Payment,Landlord Rent,rent,-5000.00,INR,7191.31
+2025-09-18,TXN0011,Checking,Debit,Gasoline Shell,Shell India,transport,-25.35,INR,7165.96
+2025-09-20,TXN0012,Checking,Debit,Groceries BigBazaar,BigBazaar,grocery,-65.80,INR,7100.16
+2025-09-22,TXN0013,Checking,Debit,Insurance Premium,LIC of India,insurance,-300.00,INR,6800.16
+2025-09-25,TXN0014,Checking,Credit,Freelance Payment,Client XYZ,income,700.00,INR,7500.16
+2025-09-27,TXN0015,Checking,Debit,Subscription Netflix,Netflix,entertainment,-8.99,INR,7491.17
+2025-09-29,TXN0016,Checking,Debit,Pharmacy Wellness,Wellness Pharmacy,health,-20.50,INR,7470.67

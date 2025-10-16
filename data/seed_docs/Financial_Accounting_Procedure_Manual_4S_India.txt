@@ -1,0 +1,11 @@
+Title: Financial & Accounting Procedure Manual — 4S India
+
+This manual describes accounting and financial procedures to ensure transparency, uniformity and accountability.  
+Highlights:
+- Definition of financial records: vouchers, journals, cheques, receipts, invoices, etc. must be preserved.  
+- Internal control procedures: segregation of duties, dual signatories, approval hierarchy.  
+- Periodic reconciliation of accounts, bank statements, and ledger mapping.  
+- Expense classification and cost allocation requirements.  
+- Audit trail maintenance: every transaction must have source documentation for verification.  
+
+Source: 4S India Procedure Manual :contentReference[oaicite:1]{index=1}

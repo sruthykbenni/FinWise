@@ -1,0 +1,18 @@
+streamlit>=1.25
+pandas
+numpy
+plotly
+python-dotenv
+sqlalchemy
+langchain
+langchain-openai
+faiss-cpu
+sentence-transformers
+transformers
+torch  # or appropriate torch+cuda builds if using GPU
+tqdm
+fastapi  # if you make microservices later
+uvicorn
+pdfplumber
+bcrypt==4.0.1
+openai

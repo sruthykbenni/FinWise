@@ -1,0 +1,9 @@
+Title: Financial Attest Audit Manual — Comptroller and Auditor General (CAG) India
+
+Overview:
+- This manual sets forth norms for the audit of public accounts, focusing on credibility, transparency, and adherence to statutes.  
+- It includes the scope and methodology of financial attest audits, verification of records, vouching, checking authorizations, internal controls, and reporting discrepancies.  
+- Emphasis on independence of auditors, assurance over financial statements, and investigation of irregularities.  
+- Use of sampling, test checks, and risk-based audit procedures.
+
+Source: CAG’s Financial Attest Audit Manual (India) :contentReference[oaicite:4]{index=4}

@@ -1,0 +1,12 @@
+Title: Indian Accounting Standard – Presentation of Financial Statements (Ind AS 1)
+
+This standard prescribes:
+- Components of a complete set of financial statements (balance sheet, statement of profit & loss, statement of cash flows, statement of changes in equity, notes).  
+- Fair presentation, compliance with Ind AS.  
+- Going concern assumption, accrual basis, consistency of presentation.  
+- Materiality and aggregation: separate line items unless immaterial.  
+- Offsetting: assets and liabilities should not be offset unless required or permitted.  
+- Comparative information: prior period data must be presented.  
+- Disclosure of significant accounting policies and judgements.  
+
+This content is derived from Indian Ind AS disclosure guides. :contentReference[oaicite:3]{index=3}
