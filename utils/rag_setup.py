@@ -1,4 +1,5 @@
 # utils/rag_setup.py
+
 import faiss
 import numpy as np
 import streamlit as st
@@ -9,20 +10,26 @@ import pdfplumber
 import os
 import re
 
+# ✅ Ensure a clean data folder exists
+DATA_DIR = Path("data")
+DATA_DIR.mkdir(exist_ok=True)
+
 EMB_MODEL_NAME = "all-MiniLM-L6-v2"
 EMB_DIM = 384
-INDEX_PATH = Path("vector_index.faiss")
-META_PATH = Path("index_meta.pkl")
+INDEX_PATH = DATA_DIR / "vector_index.faiss"
+META_PATH = DATA_DIR / "index_meta.pkl"
+
 
 class SimpleRAG:
     def __init__(self, emb_model_name=EMB_MODEL_NAME):
         @st.cache_resource(show_spinner=False)
         def get_embedding_model(name=EMB_MODEL_NAME):
             return SentenceTransformer(name)
-        self.model = get_embedding_model(emb_model_name)
 
+        self.model = get_embedding_model(emb_model_name)
         self.index = None
         self.meta = []
+
         if INDEX_PATH.exists() and META_PATH.exists():
             self.load()
 
@@ -38,12 +45,15 @@ class SimpleRAG:
             self.create_index()
         embs = self.embed_texts(texts)
         self.index.add(embs.astype("float32"))
+
         start_id = len(self.meta)
         for i, t in enumerate(texts):
             md = metadatas[i] if metadatas else {}
             md.update({"id": start_id + i, "text": t})
             self.meta.append(md)
+
         self.save()
+        print(f"✅ Added {len(texts)} new documents to FAISS index")
 
     def query(self, q, top_k=5):
         if self.index is None or self.index.ntotal == 0:
@@ -62,9 +72,12 @@ class SimpleRAG:
             pickle.dump(self.meta, f)
 
     def load(self):
-        self.index = faiss.read_index(str(INDEX_PATH))
-        with open(META_PATH, "rb") as f:
-            self.meta = pickle.load(f)
+        try:
+            self.index = faiss.read_index(str(INDEX_PATH))
+            with open(META_PATH, "rb") as f:
+                self.meta = pickle.load(f)
+        except Exception:
+            self.create_index()
 
     def ingest_folder(self, folder_path, chunk_size=500, overlap=50):
         folder = Path(folder_path)
@@ -83,10 +96,12 @@ class SimpleRAG:
                         continue
                 else:
                     continue
+
                 chunks = self._chunk_text(text, chunk_size, overlap)
                 for c in chunks:
                     text_items.append(c)
                     metas.append({"source": p.name})
+
         if text_items:
             self.add_documents(text_items, metadatas=metas)
         return len(text_items)
@@ -112,6 +127,7 @@ class SimpleRAG:
             chunks.append(text[start:end])
             start = end - overlap
         return chunks
+
 
 @st.cache_resource(show_spinner=False)
 def get_rag_index():
