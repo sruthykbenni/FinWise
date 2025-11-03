@@ -51,7 +51,7 @@ Answer:
 
     try:
         completion = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="llama-3.1-70b-versatile",
             messages=[
                 {"role": "system", "content": "You are a helpful financial assistant named FinWise."},
                 {"role": "user", "content": prompt}
