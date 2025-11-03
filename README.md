@@ -1,4 +1,4 @@
-# 💰 FinWise — AI-Powered Personal Financial Advisor
+# 💰 FinWise: AI-Powered Personal Financial Advisor
 
 FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI GPT-4o-mini**, **FAISS** and **Plotly**.  
 It helps users **analyze their spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources online.
