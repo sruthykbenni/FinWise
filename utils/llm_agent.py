@@ -20,6 +20,17 @@ def ask_llm(query, context):
     Returns a concise, professional financial insight.
     """
     client = get_groq_client()
+
+    # ✅ Trim and validate input
+    query = (query or "").strip()
+    context = (context or "").strip()[:5000]  # limit input size
+
+    if not query:
+        return "⚠️ Please enter a valid question."
+    if not context:
+        return "⚠️ No relevant context found to answer this question."
+
+    # ✅ Build prompt
     prompt = f"""
 You are FinWise — an intelligent AI-powered personal financial advisor.
 Use the provided context (user's transactions and financial documents) to respond professionally.
@@ -38,9 +49,17 @@ Guidelines:
 Answer:
 """
 
-    completion = client.chat.completions.create(
-        model="llama3-70b-8192",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
-    )
-    return completion.choices[0].message.content.strip()
+    try:
+        completion = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[
+                {"role": "system", "content": "You are a helpful financial assistant named FinWise."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=512,
+        )
+        return completion.choices[0].message.content.strip()
+
+    except Exception as e:
+        return f"⚠️ Groq API error: {str(e)}"
