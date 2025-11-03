@@ -1,6 +1,6 @@
 # 💰 FinWise — AI-Powered Personal Financial Advisor
 
-FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI API**, and **Plotly**.  
+FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI GPT-4o-mini**, **FAISS** and **Plotly**.  
 It helps users **analyze their spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources online.
 
 🔗 Live Demo: [click here](https://finwise-genai.streamlit.app/)  
@@ -24,17 +24,17 @@ It helps users **analyze their spending patterns**, **visualize insights**, and 
   - Category breakdown  
   - Top merchants  
 
-### 🧠 **AI Financial Chatbot (RAG + OpenAI GPT-4)**
-- Built using **LangChain** + **FAISS** + **OpenAI API**
-- Uses **Retrieval-Augmented Generation (RAG)** to ensure factual, data-based responses
-- Understands:
-  - Your **uploaded transaction data**
-  - **Seeded financial documents** (e.g., RBI guidelines, investment guides, personal finance best practices)
+### 🧠 **AI Financial Chatbot (RAG + OpenAI GPT-4o-mini)**
+- Uses **Retrieval-Augmented Generation (RAG)** for data-driven answers
+- Powered primarily by **OpenAI GPT-4o-mini** with **Groq fallback**
+- Retrieves relevant context from:
+  - User’s uploaded transactions
+  - Ingested PDFs or text guides (e.g., RBI/SEBI documents)
 - Example queries:
-  > “What were my biggest expenses last month?”  
-  > “Summarize my income vs expenses this quarter.”  
-  > “How can I save more based on my transaction patterns?”  
-  > “Explain what mutual funds are, based on RBI/SEBI guidelines.”
+  > “What were my biggest expenses last month?”
+  > “Summarize my income vs expenses this quarter.”
+  > “Give tips to reduce food spending.”
+  > “Explain SIPs based on RBI guidelines.”
 
 ### 🗃️ **Smart Data Handling**
 - Works with various bank export formats (Debit/Credit, Amount-only, etc.)
@@ -57,16 +57,14 @@ It helps users **analyze their spending patterns**, **visualize insights**, and 
                              │
                 Preprocessing & Categorization
                              │
-           ┌───────────────────────────────────────┐
-           │ FAISS Vector Store (Local Embeddings) │
-           └───────────────────────────────────────┘
+                 ┌───────────────────────────┐
+                 │ FAISS Vector Index (RAG)  │
+                 └───────────────────────────┘
                              │
-                        RAG Retriever
-                             │
-                     Context Sent to LLM
+                      Context Retrieval
                              │
               ┌────────────────────────────────┐
-              │  OpenAI GPT-4 (via LangChain)  │
+              │    OpenAI GPT-4o-mini (LLM)    │
               └────────────────────────────────┘
                              │
                       Smart AI Response
@@ -103,8 +101,9 @@ Create a `.env` file in the project root and add:
 
 ```
 OPENAI_API_KEY=your_openai_api_key_here
+GROQ_API_KEY=your_optional_groq_api_key_here
 ```
-
+OpenAI GPT-4o-mini is the primary model. Groq (LLaMA-3-8B) acts as a fallback when OpenAI limits are reached.
 You can get your API key from [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys).
 
 ### 5️⃣ Initialize the User Database
@@ -166,12 +165,13 @@ FinWise/
 
 ---
 
-## 🧠 **RAG + OpenAI Integration Details**
+## 🧠 **RAG + LLM Integration Details**
 
-* **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2`
-* **Vector Database**: FAISS (in-memory index)
-* **LLM Backend**: OpenAI GPT-4 via LangChain
-* **Retriever Chain**: Context-aware querying from both user and reference data
+* **Embeddings**:	`sentence-transformers/all-MiniLM-L6-v2`
+* **Vector DB**:	FAISS (in-memory)
+* **Primary Model**:	gpt-4o-mini (OpenAI)
+* **Fallback**:	llama-3.1-8b-instant (Groq)
+* **Retriever**:	Context from transactions + reference PDFs
 
 This setup ensures:
 
@@ -201,11 +201,11 @@ This setup ensures:
 
 ## 📚 Future Enhancements
 
-✅ Integration with live banking APIs (Plaid / Yodlee)
-✅ Expense forecasting using ML models (Prophet / LSTM)
-✅ Voice-based financial assistant
-✅ PDF bank statement auto-parsing
-✅ Investment portfolio optimization module
+✅ Voice-based assistant
+✅ ML-based expense forecasting (Prophet / LSTM)
+✅ PDF statement auto-parsing
+✅ Investment portfolio insights
+✅ Multi-user cloud deployment
 
 ---
 
@@ -224,6 +224,7 @@ This project is licensed under the **MIT License** — free for personal, resear
 
 ## 🌟 Acknowledgments
 
+* [Groq API](https://console.groq.com/docs/overview)
 * [OpenAI API](https://platform.openai.com/)
 * [LangChain](https://www.langchain.com/)
 * [Sentence Transformers](https://www.sbert.net/)
