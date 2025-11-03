@@ -1,33 +1,58 @@
 # pages/2_Chatbot.py
 import streamlit as st
-from utils.rag_setup import get_rag_index
 from utils.llm_agent import ask_llm
+from utils.rag_setup import get_rag_index
 
-st.set_page_config(page_title="FinWise Chatbot", layout="wide")
+st.set_page_config(page_title="FinWise Chatbot", page_icon="🤖", layout="wide")
 
-st.title("💬 FinWise Financial Assistant")
+st.markdown("<h2 style='text-align:center;'>🤖 FinWise Chat Assistant</h2>", unsafe_allow_html=True)
+st.write("Ask me about your spending habits, budgets, or any transaction insights!")
 
-st.markdown("""
-Ask anything about your financial data or general finance topics.
-Your chatbot combines your uploaded transactions with standard financial documents for accurate, context-aware answers.
-""")
+rag = get_rag_index()
 
-query = st.text_area("Enter your question:", placeholder="e.g. Summarize my top expenses this month")
+# --- Initialize Chat History ---
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-if st.button("Get Answer") and query.strip():
-    with st.spinner("Analyzing your financial data..."):
-        rag = get_rag_index()
-        results = rag.query(query, top_k=5)
-        context = "\n\n".join([r["text"] for r in results])
-        sources = list({r["source"] for r in results})
+# --- Chat Input UI ---
+user_query = st.chat_input("Type your message here...")
 
-        if not context:
-            st.warning("No relevant data found yet. Try uploading transactions or ingesting seed docs.")
-        else:
-            answer = ask_llm(query, context)
-            st.markdown("### 🧠 Answer")
-            st.write(answer)
+if user_query:
+    # Display user message
+    with st.chat_message("user"):
+        st.markdown(user_query)
 
-            st.markdown("**Sources Used:**")
-            for s in sources:
-                st.markdown(f"- {s}")
+    # --- Retrieve relevant context using RAG ---
+    similar_docs = rag.query(user_query, top_k=5)
+    context_text = "\n".join([d.get("text", "") for d in similar_docs]) if similar_docs else ""
+
+    # --- Generate chatbot response ---
+    with st.spinner("Thinking..."):
+        try:
+            bot_response = ask_llm(user_query, context_text)
+        except Exception as e:
+            bot_response = f"⚠️ Error generating response: {e}"
+
+    # Display bot response
+    with st.chat_message("assistant"):
+        st.markdown(bot_response)
+
+    # Save chat history
+    st.session_state.chat_history.append({"user": user_query, "bot": bot_response})
+
+# --- Display Chat History ---
+if st.session_state.chat_history:
+    with st.expander("🕓 View Chat History"):
+        for i, chat in enumerate(st.session_state.chat_history, 1):
+            st.markdown(f"**You:** {chat['user']}")
+            st.markdown(f"**FinWise:** {chat['bot']}")
+            st.markdown("---")
+
+# --- Sidebar Information ---
+st.sidebar.markdown("### 💡 FinWise AI Chatbot")
+st.sidebar.info(
+    "FinWise uses your transaction history and embedded documents to answer "
+    "personal finance questions. Ask me anything related to your spending, income, or budget!"
+)
+st.sidebar.markdown("✅ Powered by OpenAI GPT-4o-mini (with Groq fallback)")
+
