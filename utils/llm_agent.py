@@ -5,29 +5,33 @@ import streamlit as st
 from openai import OpenAI
 from groq import Groq
 
-# ✅ Load API keys from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# ✅ Dynamically fetch API keys each time (to allow sidebar updates)
+def get_api_keys():
+    openai_key = os.getenv("OPENAI_API_KEY") or st.session_state.get("OPENAI_API_KEY")
+    groq_key = os.getenv("GROQ_API_KEY") or st.session_state.get("GROQ_API_KEY")
+    return openai_key, groq_key
 
-# ✅ Cache clients to avoid reloading every time
+# ✅ Cache clients separately to improve efficiency
 @st.cache_resource(show_spinner=False)
-def get_openai_client():
-    return OpenAI(api_key=OPENAI_API_KEY)
+def get_openai_client(api_key):
+    return OpenAI(api_key=api_key)
 
 @st.cache_resource(show_spinner=False)
-def get_groq_client():
-    if GROQ_API_KEY:
-        return Groq(api_key=GROQ_API_KEY)
+def get_groq_client(api_key):
+    if api_key:
+        return Groq(api_key=api_key)
     return None
 
 def ask_llm(user_query, context_text):
     """
     Handles the logic for querying the LLM.
-    - Uses OpenAI GPT-4o-mini as default.
-    - Falls back to Groq if OpenAI fails or limit reached.
+    - Uses Groq (Gemma-7B-IT) as primary for fast, free inference.
+    - Falls back to OpenAI GPT-4o-mini when Groq fails or key not provided.
     """
-    openai_client = get_openai_client()
-    groq_client = get_groq_client()
+
+    OPENAI_API_KEY, GROQ_API_KEY = get_api_keys()
+    openai_client = get_openai_client(OPENAI_API_KEY) if OPENAI_API_KEY else None
+    groq_client = get_groq_client(GROQ_API_KEY) if GROQ_API_KEY else None
 
     # Build prompt
     prompt = f"""
@@ -43,39 +47,37 @@ def ask_llm(user_query, context_text):
     Answer professionally and in simple terms.
     """
 
-    try:
-        # --- Try OpenAI first ---
-        response = openai_client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a helpful AI financial assistant."},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.3,
-            max_tokens=512,
-        )
-        return response.choices[0].message.content.strip()
+    # --- Prefer GROQ first ---
+    if groq_client:
+        try:
+            response = groq_client.chat.completions.create(
+                model="gemma-7b-it",
+                messages=[
+                    {"role": "system", "content": "You are a helpful AI financial assistant."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3,
+                max_tokens=512,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as groq_error:
+            print(f"⚠️ Groq API error: {groq_error}")
 
-    except Exception as openai_error:
-        print(f"⚠️ OpenAI API error: {openai_error}")
+    # --- Fallback to OpenAI ---
+    if openai_client:
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are a helpful AI financial assistant."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3,
+                max_tokens=512,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as openai_error:
+            print(f"⚠️ OpenAI API error: {openai_error}")
 
-        # --- Try Groq as fallback ---
-        if groq_client:
-            try:
-                response = groq_client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful AI financial assistant."},
-                        {"role": "user", "content": prompt},
-                    ],
-                    temperature=0.3,
-                    max_tokens=512,
-                )
-                return response.choices[0].message.content.strip()
-
-            except Exception as groq_error:
-                print(f"⚠️ Groq API fallback error: {groq_error}")
-                return "⚠️ Sorry, the language model service is temporarily unavailable. Please try again later."
-        else:
-            return "⚠️ Unable to connect to the language model. Please check your API keys."
-
+    # --- If both fail ---
+    return "⚠️ Sorry, both AI services are unavailable right now. Please check your API keys and try again later."
