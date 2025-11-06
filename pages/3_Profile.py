@@ -5,7 +5,7 @@ from utils.analysis import monthly_spend, category_breakdown
 import pandas as pd
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="Profile — FinWise", layout="wide")
+st.set_page_config(page_title="Profile: FinWise", layout="wide")
 
 # -------------------------------------------------------------
 # 🧾 Authentication
