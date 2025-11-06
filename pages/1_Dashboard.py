@@ -31,13 +31,6 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
-# --- Sidebar Navigation ---
-
-st.sidebar.markdown("---")
-st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
-st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
-
-
 # ---------------- Data Upload Section ----------------
 uploaded = st.file_uploader("📂 Upload your transaction CSV", type=["csv"])
 
