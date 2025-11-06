@@ -1,78 +1,80 @@
 # 💰 FinWise: AI-Powered Personal Financial Advisor
 
-FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI GPT-4o-mini**, **FAISS** and **Plotly**.  
-It helps users **analyze their spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources online.
+FinWise is an **AI-powered personal financial dashboard** and **RAG-based financial chatbot** built using **Streamlit**, **LangChain**, **OpenAI GPT-4o-mini**, **FAISS**, and **Plotly**.  
+It helps users **analyze spending patterns**, **visualize insights**, and **chat with an intelligent assistant** that understands both their personal financial data and reliable financial sources.
 
-🔗 Live Demo: [click here](https://finwise-genai.streamlit.app/)  
+🔗 **Live Demo:** [https://finwise-gen-ai.streamlit.app/](https://finwise-gen-ai.streamlit.app/)
 
 ---
 
 ## 🚀 Features
 
-### 🔐 **User Authentication**
-- Secure user management handled via **SQLite database (`users.db`)**
-- Passwords are **hashed with bcrypt** using `passlib`
-- Persistent sessions and validation handled by `session_manager.py`
-- Preloaded with a default demo user for quick login
+### 🔐 User Authentication
+- Secure user login and signup with **SQLite (`users.db`)**
+- Passwords hashed using **bcrypt + passlib**
+- Persistent session validation via `session_manager.py`
+- Demo user available for quick access
 
-### 📊 **Financial Dashboard**
-- Upload your transaction data (CSV) or load a demo dataset
-- Auto-categorizes transactions into meaningful groups (Food, Rent, Salary, Transport, etc.)
-- Calculates **Income, Expense, and Net Flow** dynamically per month
-- Visual insights using **Plotly**:
+### 📊 Financial Dashboard
+- Upload your transaction CSV or load a demo dataset
+- Auto-categorizes transactions (Food, Rent, Salary, etc.)
+- Calculates **Income, Expense, and Net Flow** per month
+- Plotly visualizations for:
   - Monthly spending trends  
   - Category breakdown  
   - Top merchants  
 
-### 🧠 **AI Financial Chatbot (RAG + OpenAI GPT-4o-mini)**
-- Uses **Retrieval-Augmented Generation (RAG)** for data-driven answers
-- Powered primarily by **OpenAI GPT-4o-mini** with **Groq fallback**
-- Retrieves relevant context from:
-  - User’s uploaded transactions
-  - Ingested PDFs or text guides (e.g., RBI/SEBI documents)
+### 🧠 AI Financial Chatbot (RAG + GPT-4o-mini)
+- Powered by **Retrieval-Augmented Generation (RAG)**  
+- Uses **OpenAI GPT-4o-mini** primarily, with **Groq fallback (llama-3.1-8b-instant)**
+- Retrieves context from:
+  - Uploaded transactions  
+  - Seeded financial PDFs or text files (e.g., RBI/SEBI docs)
+- Supports live API key entry via sidebar
 - Example queries:
-  > “What were my biggest expenses last month?”
-  > “Summarize my income vs expenses this quarter.”
-  > “Give tips to reduce food spending.”
+  > “What were my biggest expenses last month?”  
+  > “Summarize my income vs expenses this quarter.”  
+  > “How can I reduce my transport costs?”  
   > “Explain SIPs based on RBI guidelines.”
 
-### 🗃️ **Smart Data Handling**
-- Works with various bank export formats (Debit/Credit, Amount-only, etc.)
-- Automatically detects date and amount columns
-- Categorizes expenses and incomes intelligently
+### 🗃️ Smart Data Handling
+- Works with various bank export formats  
+- Automatically detects and standardizes columns  
+- Intelligent expense categorization  
 
-### 🧮 **Visualization & Insights**
-- Beautiful Plotly dashboards  
-- Real-time calculations for monthly insights  
-- Trendline comparison between months
-
----
-
-## 🧠 **Architecture Overview**
-
-```
-              ┌─────────────────────────────────┐
-              │      User Transaction Data      │
-              └──────────────┬──────────────────┘
-                             │
-                Preprocessing & Categorization
-                             │
-                 ┌───────────────────────────┐
-                 │ FAISS Vector Index (RAG)  │
-                 └───────────────────────────┘
-                             │
-                      Context Retrieval
-                             │
-              ┌────────────────────────────────┐
-              │    OpenAI GPT-4o-mini (LLM)    │
-              └────────────────────────────────┘
-                             │
-                      Smart AI Response
-```
+### 🧮 Visualization & Insights
+- Real-time Plotly dashboards  
+- Income vs Expense trend analysis  
+- Monthly summaries and reports  
 
 ---
 
-## ⚙️ **Installation & Setup**
+## 🧠 Architecture Overview
+
+
+          ┌──────────────────────────────┐
+          │  User Transaction Data (CSV) │
+          └──────────────┬───────────────┘
+                         │
+           Preprocessing & Categorization
+                         │
+             ┌───────────────────────────┐
+             │ FAISS Vector Index (RAG)  │
+             └───────────────────────────┘
+                         │
+                  Context Retrieval
+                         │
+    ┌───────────────────────────────────────────┐
+    │  OpenAI GPT-4o-mini + Groq (Fallback)     │
+    └───────────────────────────────────────────┘
+                         │
+                  Personalized Insight
+
+
+
+---
+
+## ⚙️ Installation & Setup
 
 ### 1️⃣ Clone the Repository
 ```bash
@@ -95,18 +97,21 @@ source .venv/bin/activate    # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Add Your OpenAI API Key
+### 4️⃣ Add API Keys
 
-Create a `.env` file in the project root and add:
+Create a `.env` file in your project root and add:
 
 ```
 OPENAI_API_KEY=your_openai_api_key_here
 GROQ_API_KEY=your_optional_groq_api_key_here
 ```
-OpenAI GPT-4o-mini is the primary model. Groq (LLaMA-3-8B) acts as a fallback when OpenAI limits are reached.
-You can get your API key from [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys).
 
-### 5️⃣ Initialize the User Database
+You can also enter these dynamically in the sidebar while the app runs.
+
+**Primary model:** GPT-4o-mini (OpenAI)
+**Fallback model:** LLaMA-3.1-8B-Instant (Groq)
+
+### 5️⃣ Initialize Database
 
 ```bash
 python - <<'PY'
@@ -116,9 +121,6 @@ create_user("demo_user", "DemoPass123")
 print("✅ demo_user created successfully!")
 PY
 ```
-This creates:
-- A SQLite database file: users.db
-- A users table with hashed passwords and session support
 
 ### 6️⃣ Run the App
 
@@ -126,10 +128,12 @@ This creates:
 streamlit run app.py
 ```
 
-Then log in using:
+Login credentials:
 
-* Username: `demo_user`
-* Password: `DemoPass123`
+```
+Username: demo_user
+Password: DemoPass123
+```
 
 ---
 
@@ -138,98 +142,108 @@ Then log in using:
 ```
 FinWise/
 │
-├── app.py                         # Main Streamlit entry
-├── requirements.txt               # Dependencies
-├── .env                           # Stores OpenAI API Key
+├── app.py                       # Main Streamlit entry
+├── requirements.txt             # Dependencies
+├── .env                         # API keys
 │
 ├── pages/
-│   ├── 1_Dashboard.py             # Analytics dashboard
-│   ├── 2_Chatbot.py               # Chatbot interface
-│   └── 3_Profile.py               # User summary page
+│   ├── 0_Home.py                # Home navigation page
+│   ├── 1_Dashboard.py           # Financial analytics
+│   ├── 2_Chatbot.py             # RAG chatbot with API key input
+│   └── 3_Profile.py             # User profile & reports
 │
 ├── utils/
-│   ├── auth.py                    # Authentication
-│   ├── session_manager.py         # Session validation
-│   ├── preprocessing.py           # Data cleaning
-│   ├── analysis.py                # Financial calculations
-│   ├── plotly_charts.py           # Charts and visuals
-│   ├── rag_setup.py               # RAG embedding + retrieval
+│   ├── auth.py                  # Authentication logic
+│   ├── session_manager.py       # Session handling
+│   ├── preprocessing.py         # Data cleaning
+│   ├── analysis.py              # Financial computations
+│   ├── plotly_charts.py         # Plotly visuals
+│   ├── rag_setup.py             # FAISS + embeddings
+│   └── llm_agent.py             # GPT-4o-mini + Groq logic
 │
-├── vector_index.faiss             # FAISS index file
-├── index_meta.pkl                 # Metadata for RAG
+├── data/
+│   ├── sample_transactions.csv  # Demo data
+│   └── seed_docs/               # RBI/SEBI reference PDFs
 │
-└── data/
-    ├── sample_transactions.csv    # Example dataset
-    └── seed_docs/                 # Standard financial references
+├── vector_index.faiss           # FAISS index
+└── index_meta.pkl               # Metadata for RAG
 ```
 
 ---
 
-## 🧠 **RAG + LLM Integration Details**
+## 🧠 RAG + LLM Integration
 
-* **Embeddings**:	`sentence-transformers/all-MiniLM-L6-v2`
-* **Vector DB**:	FAISS (in-memory)
-* **Primary Model**:	gpt-4o-mini (OpenAI)
-* **Fallback**:	llama-3.1-8b-instant (Groq)
-* **Retriever**:	Context from transactions + reference PDFs
+| Component         | Description                                |
+| ----------------- | ------------------------------------------ |
+| **Embeddings**    | `sentence-transformers/all-MiniLM-L6-v2`   |
+| **Vector Store**  | FAISS                                      |
+| **Primary Model** | GPT-4o-mini (OpenAI)                       |
+| **Fallback**      | LLaMA-3.1-8B-Instant (Groq)                |
+| **Retriever**     | Context from transactions + reference PDFs |
 
-This setup ensures:
+This enables:
 
-* Reliable, **fact-grounded answers**
-* Personalized responses using **your financial history**
-* Support for **financial advice, summaries, and planning**
+* Fact-grounded, data-driven financial insights
+* Personalized answers from your actual data
+* Resilience to API limits with multi-model fallback
 
 ---
 
 ## 📈 Example Queries
 
-| User Query                                                | Example AI Response                                                                                                                                 |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| “Summarize my income and expense for September.”          | “You earned ₹25,000 and spent ₹18,400, resulting in a net savings of ₹6,600.”                                                                       |
-| “What are my top 3 spending categories?”                  | “Food & Dining (35%), Transport (22%), and Groceries (18%).”                                                                                        |
-| “Explain SIP investments using reliable finance sources.” | “A Systematic Investment Plan (SIP) allows you to invest in mutual funds periodically. It helps with rupee cost averaging, as per SEBI guidelines.” |
+| User Query                                        | Example Response                                                                                        |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| “Summarize my income and expenses for September.” | “You earned ₹25,000 and spent ₹18,400 — net savings ₹6,600.”                                            |
+| “Top 3 spending categories?”                      | “Food (35%), Transport (22%), and Groceries (18%).”                                                     |
+| “Explain SIPs in mutual funds.”                   | “A SIP allows periodic mutual fund investments and helps average market costs, as per SEBI guidelines.” |
 
 ---
 
-## 🌐 Deployment Options
+## 🌐 Deployment
 
-* [Streamlit Cloud](https://streamlit.io/cloud)
+* **Streamlit Cloud** *(recommended)*
 * Render / Railway / Hugging Face Spaces
-* Self-hosted on VPS with `uvicorn` + FastAPI microservices (optional)
+* Self-hosted with FastAPI + Uvicorn
 
 ---
 
 ## 📚 Future Enhancements
 
 ✅ Voice-based assistant
-✅ ML-based expense forecasting (Prophet / LSTM)
-✅ PDF statement auto-parsing
-✅ Investment portfolio insights
-✅ Multi-user cloud deployment
+✅ Predictive expense forecasting (Prophet / LSTM)
+✅ PDF statement parsing
+✅ Investment portfolio analytics
+✅ Multi-user cloud version
 
 ---
 
-## 🧑‍💻 Author
+## 👩‍💻 Author
 
-👩‍💻 Sruthy K Benni
-[LinkedIn](https://www.linkedin.com/in/sruthy-k-benni)
+**Sruthy K Benni**
+*MSc Computer Science (Data Analytics)*
+🔗 [LinkedIn](https://www.linkedin.com/in/sruthy-k-benni)
 
 ---
 
 ## 🪪 License
 
-This project is licensed under the **MIT License** — free for personal, research, and educational use.
+Licensed under the **MIT License** — free for personal, research, and educational use.
 
 ---
 
 ## 🌟 Acknowledgments
 
-* [Groq API](https://console.groq.com/docs/overview)
 * [OpenAI API](https://platform.openai.com/)
+* [Groq API](https://console.groq.com/docs/overview)
 * [LangChain](https://www.langchain.com/)
 * [Sentence Transformers](https://www.sbert.net/)
 * [FAISS](https://github.com/facebookresearch/faiss)
 * [Streamlit](https://streamlit.io)
 * [Plotly](https://plotly.com/python/)
 
+```
+
 ---
+
+Would you like me to generate a **short GitHub project description (2–3 lines)** you can paste under the repository name too? It’ll make your repo stand out immediately when viewed.
+```
