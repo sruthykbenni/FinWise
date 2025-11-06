@@ -73,7 +73,7 @@ def ask_llm(user_query, context_text):
     if groq_client:
         try:
             response = groq_client.chat.completions.create(
-                model="gemma-7b-it",
+                model="llama-3.1-8b-instant",
                 messages=[
                     {"role": "system", "content": "You are a helpful AI financial assistant."},
                     {"role": "user", "content": prompt},
