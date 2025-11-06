@@ -14,7 +14,7 @@ if "username" not in st.session_state:
 
 # --- LOGIN / SIGNUP UI ---
 def login_ui():
-    st.markdown("<h2 style='text-align:center;'>💰 FinWise — Login</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>💰 FinWise: Login</h2>", unsafe_allow_html=True)
     with st.form("login_form", clear_on_submit=False):
         user = st.text_input("Username")
         pwd = st.text_input("Password", type="password")
@@ -30,7 +30,7 @@ def login_ui():
                 st.error("Invalid username or password")
 
 def signup_ui():
-    st.markdown("<h2 style='text-align:center;'>🆕 Create Account</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>Create Account</h2>", unsafe_allow_html=True)
     with st.form("signup_form"):
         u = st.text_input("Choose Username")
         p = st.text_input("Choose Password", type="password")
@@ -63,13 +63,13 @@ if st.session_state.token and validate_session(st.session_state.token):
     st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot", icon="🤖")
     st.sidebar.page_link("pages/3_Profile.py", label="Profile", icon="👤")
 
-    if st.sidebar.button("🚪 Logout"):
+    if st.sidebar.button("Logout"):
         logout()
 
     # Redirect to Home Page after login
     st.switch_page("pages/0_Home.py")
 else:
-    tab1, tab2 = st.tabs(["🔑 Login", "🆕 Sign Up"])
+    tab1, tab2 = st.tabs(["Login", "Sign Up"])
     with tab1:
         login_ui()
     with tab2:
