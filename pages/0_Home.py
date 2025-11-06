@@ -13,7 +13,7 @@ st.sidebar.success(f"Welcome, {username} 👋")
 
 # --- Sidebar Navigation ---
 
-if st.sidebar.button("🚪 Logout"):
+if st.sidebar.button("Logout"):
     clear_session()
     st.session_state.token = None
     st.session_state.username = None
