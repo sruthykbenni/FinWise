@@ -1,5 +1,6 @@
 # pages/2_Chatbot.py
 import streamlit as st
+import os
 from utils.llm_agent import ask_llm
 from utils.rag_setup import get_rag_index
 
@@ -7,6 +8,12 @@ st.set_page_config(page_title="FinWise Chatbot", page_icon="🤖", layout="wide"
 
 st.markdown("<h2 style='text-align:center;'>🤖 FinWise Chat Assistant</h2>", unsafe_allow_html=True)
 st.write("Ask me about your spending habits, budgets, or any transaction insights!")
+
+# --- Load API Keys from session (fallback to .env if not set) ---
+if "OPENAI_API_KEY" in st.session_state and st.session_state["OPENAI_API_KEY"]:
+    os.environ["OPENAI_API_KEY"] = st.session_state["OPENAI_API_KEY"]
+if "GROQ_API_KEY" in st.session_state and st.session_state["GROQ_API_KEY"]:
+    os.environ["GROQ_API_KEY"] = st.session_state["GROQ_API_KEY"]
 
 rag = get_rag_index()
 
@@ -54,5 +61,4 @@ st.sidebar.info(
     "FinWise uses your transaction history and embedded documents to answer "
     "personal finance questions. Ask me anything related to your spending, income, or budget!"
 )
-st.sidebar.markdown("✅ Powered by OpenAI GPT-4o-mini (with Groq fallback)")
-
+st.sidebar.markdown("✅ Powered by Groq Gemma-7B-IT (with GPT-4 fallback)")
