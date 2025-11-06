@@ -5,33 +5,39 @@ import streamlit as st
 from openai import OpenAI
 from groq import Groq
 
-# ✅ Dynamically fetch API keys each time (to allow sidebar updates)
-def get_api_keys():
-    openai_key = os.getenv("OPENAI_API_KEY") or st.session_state.get("OPENAI_API_KEY")
-    groq_key = os.getenv("GROQ_API_KEY") or st.session_state.get("GROQ_API_KEY")
-    return openai_key, groq_key
-
-# ✅ Cache clients separately to improve efficiency
-@st.cache_resource(show_spinner=False)
-def get_openai_client(api_key):
+def get_openai_client():
+    """Create OpenAI client using the latest key from sidebar or env."""
+    api_key = (
+        st.session_state.get("OPENAI_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+    )
+    if not api_key:
+        raise ValueError("⚠️ Missing OpenAI API key.")
     return OpenAI(api_key=api_key)
 
-@st.cache_resource(show_spinner=False)
-def get_groq_client(api_key):
-    if api_key:
-        return Groq(api_key=api_key)
-    return None
+def get_groq_client():
+    """Create Groq client using the latest key from sidebar or env."""
+    api_key = (
+        st.session_state.get("GROQ_API_KEY")
+        or os.getenv("GROQ_API_KEY")
+    )
+    if not api_key:
+        return None
+    return Groq(api_key=api_key)
 
 def ask_llm(user_query, context_text):
     """
     Handles the logic for querying the LLM.
-    - Uses Groq (Gemma-7B-IT) as primary for fast, free inference.
-    - Falls back to OpenAI GPT-4o-mini when Groq fails or key not provided.
+    - Uses OpenAI GPT-4o-mini as default.
+    - Falls back to Groq if OpenAI fails or limit reached.
     """
+    try:
+        openai_client = get_openai_client()
+    except Exception as e:
+        st.error(f"⚠️ OpenAI key error: {e}")
+        openai_client = None
 
-    OPENAI_API_KEY, GROQ_API_KEY = get_api_keys()
-    openai_client = get_openai_client(OPENAI_API_KEY) if OPENAI_API_KEY else None
-    groq_client = get_groq_client(GROQ_API_KEY) if GROQ_API_KEY else None
+    groq_client = get_groq_client()
 
     # Build prompt
     prompt = f"""
@@ -47,23 +53,7 @@ def ask_llm(user_query, context_text):
     Answer professionally and in simple terms.
     """
 
-    # --- Prefer GROQ first ---
-    if groq_client:
-        try:
-            response = groq_client.chat.completions.create(
-                model="gemma-7b-it",
-                messages=[
-                    {"role": "system", "content": "You are a helpful AI financial assistant."},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.3,
-                max_tokens=512,
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as groq_error:
-            print(f"⚠️ Groq API error: {groq_error}")
-
-    # --- Fallback to OpenAI ---
+    # --- Try OpenAI First ---
     if openai_client:
         try:
             response = openai_client.chat.completions.create(
@@ -77,7 +67,23 @@ def ask_llm(user_query, context_text):
             )
             return response.choices[0].message.content.strip()
         except Exception as openai_error:
-            print(f"⚠️ OpenAI API error: {openai_error}")
+            st.warning(f"⚠️ OpenAI API error: {openai_error}")
 
-    # --- If both fail ---
-    return "⚠️ Sorry, both AI services are unavailable right now. Please check your API keys and try again later."
+    # --- Fallback to Groq ---
+    if groq_client:
+        try:
+            response = groq_client.chat.completions.create(
+                model="gemma-7b-it",
+                messages=[
+                    {"role": "system", "content": "You are a helpful AI financial assistant."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3,
+                max_tokens=512,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as groq_error:
+            return f"⚠️ Groq API error: {groq_error}"
+
+    return "⚠️ No valid API keys found. Please enter them in the sidebar."
+
