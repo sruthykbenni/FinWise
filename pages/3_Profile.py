@@ -19,17 +19,6 @@ username = get_user(token)
 st.sidebar.success(f"Profile — {username}")
 st.title("👤 Profile & Reports")
 
-# --- Sidebar Navigation ---
-st.sidebar.title("🏠 Navigation")
-st.sidebar.page_link("app.py", label="Home", icon="🏠")
-st.sidebar.page_link("pages/1_Dashboard.py", label="Dashboard", icon="📊")
-st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot", icon="🤖")
-st.sidebar.page_link("pages/3_Profile.py", label="Profile", icon="👤")
-
-st.sidebar.markdown("---")
-st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
-st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
-
 
 # -------------------------------------------------------------
 # 📊 Data Section
