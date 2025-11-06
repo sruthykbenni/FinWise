@@ -55,9 +55,6 @@ if st.session_state.token and validate_session(st.session_state.token):
     st.sidebar.markdown("---")
     st.sidebar.success("Use the sidebar to navigate.")
 
-    # 🔑 Optional API Key Inputs
-    st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
-    st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
 
     # Navigation Links
     st.sidebar.title("🏠 Navigation")
