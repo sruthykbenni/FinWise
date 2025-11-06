@@ -4,7 +4,7 @@ import os
 from utils.llm_agent import ask_llm
 from utils.rag_setup import get_rag_index
 
-st.set_page_config(page_title="FinWise Chatbot", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="FinWise Chatbot", layout="wide")
 
 st.markdown("<h2 style='text-align:center;'>🤖 FinWise Chat Assistant</h2>", unsafe_allow_html=True)
 st.write("Ask me about your spending habits, budgets, or any transaction insights!")
@@ -65,4 +65,4 @@ st.sidebar.info(
     "FinWise uses your transaction history and embedded documents to answer "
     "personal finance questions. Ask me anything related to your spending, income, or budget!"
 )
-st.sidebar.markdown("✅ Powered by Groq Gemma-7B-IT (with GPT-4 fallback)")
+st.sidebar.markdown("✅ Powered by llama-3.1-8b-instant (with GPT-4 fallback)")
