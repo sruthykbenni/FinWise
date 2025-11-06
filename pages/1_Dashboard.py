@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Dashboard — FinWise", layout="wide")
+st.set_page_config(page_title="Dashboard: FinWise", layout="wide")
 
 # ---------------- Session Validation ----------------
 token = st.session_state.get("token")
@@ -84,8 +84,8 @@ if "df" in st.session_state:
                 st.success(f"✅ {n} transaction summaries indexed successfully!")
                 st.info("Now visit the **Chatbot** page and ask personalized questions like:")
                 st.code("What were my biggest expenses last month?")
-                st.code("How can I reduce my transport costs?")
-                st.code("Summarize my entertainment spending this month.")
+                st.code("What are my top 3 spending categories?")
+                st.code("Explain SIP investments using reliable finance sources.")
             else:
                 st.warning("No new transactions were added to the index.")
         except Exception as e:
