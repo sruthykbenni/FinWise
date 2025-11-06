@@ -2,6 +2,7 @@
 import streamlit as st
 from utils.auth import init_db, verify_user, create_user
 from utils.session_manager import create_session, validate_session, clear_session
+import os
 
 st.set_page_config(page_title="FinWise", page_icon="💰", layout="wide")
 
@@ -11,10 +12,12 @@ if "token" not in st.session_state:
     st.session_state.token = None
 if "username" not in st.session_state:
     st.session_state.username = None
+if "active_page" not in st.session_state:
+    st.session_state.active_page = "Home"
 
 # --- LOGIN / SIGNUP UI ---
 def login_ui():
-    st.markdown("<h2 style='text-align:center;'>💰 FinWise - Login</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>💰 FinWise — Login</h2>", unsafe_allow_html=True)
     with st.form("login_form", clear_on_submit=False):
         user = st.text_input("Username")
         pwd = st.text_input("Password", type="password")
@@ -24,6 +27,7 @@ def login_ui():
                 token = create_session(user)
                 st.session_state.username = user
                 st.session_state.token = token
+                st.session_state.active_page = "Home"
                 st.success("✅ Logged in successfully!")
                 st.rerun()
             else:
@@ -46,51 +50,66 @@ def logout():
     clear_session()
     st.session_state.token = None
     st.session_state.username = None
+    st.session_state.active_page = "Home"
     st.success("Logged out!")
     st.rerun()
 
-# --- Routing Logic ---
+# --- MAIN LOGIC ---
 if st.session_state.token and validate_session(st.session_state.token):
     st.sidebar.markdown(f"👤 **{st.session_state.username}**")
-    
-    # --- Navigation Menu ---
-    nav = st.sidebar.radio("FinWise", ["Home", "📊 Dashboard", "💬 Chatbot", "👤 Profile"], index=1)
-    st.sidebar.markdown("---")
-
-    # --- API Key Input Section ---
-    st.sidebar.markdown("### 🔑 API Configuration")
-    openai_key = st.sidebar.text_input("OpenAI API Key", type="password")
-    groq_key = st.sidebar.text_input("Groq API Key", type="password")
-    if st.sidebar.button("Save Keys"):
-        if openai_key:
-            st.session_state["OPENAI_API_KEY"] = openai_key
-        if groq_key:
-            st.session_state["GROQ_API_KEY"] = groq_key
-        st.sidebar.success("✅ API keys saved for this session.")
-
-    st.sidebar.markdown("---")
-    if st.sidebar.button("🚪 Logout"):
+    if st.sidebar.button("Logout"):
         logout()
 
-    # --- Navigation Handling ---
-    if nav == "Home":
-        st.title("💰 Welcome to FinWise")
-        st.markdown("""
-        ### Your AI-Powered Personal Financial Advisor  
-        Use the sidebar to navigate to the Dashboard, Chatbot, or Profile sections.  
-        FinWise helps you visualize your spending, understand financial habits, and get AI-generated insights.
-        """)
-    elif nav == "📊 Dashboard":
+    st.sidebar.markdown("---")
+
+    # Sidebar Navigation
+    page = st.sidebar.radio(
+        "📍 Navigate",
+        ["Home", "Dashboard", "Chatbot", "Profile", "API Settings"],
+        index=["Home", "Dashboard", "Chatbot", "Profile", "API Settings"].index(st.session_state.active_page),
+    )
+    st.session_state.active_page = page
+
+    # --- Handle Pages ---
+    if page == "Home":
+        st.title("🏠 Welcome to FinWise")
+        st.markdown(
+            """
+            FinWise is your AI-powered personal financial assistant.  
+            Use the sidebar to explore:
+            - **Dashboard:** Analyze and visualize your transactions  
+            - **Chatbot:** Talk to your AI finance assistant  
+            - **Profile:** View monthly summaries  
+            - **API Settings:** Configure Groq/OpenAI keys
+            """
+        )
+
+    elif page == "Dashboard":
         st.switch_page("pages/1_Dashboard.py")
-    elif nav == "💬 Chatbot":
+
+    elif page == "Chatbot":
         st.switch_page("pages/2_Chatbot.py")
-    elif nav == "👤 Profile":
+
+    elif page == "Profile":
         st.switch_page("pages/3_Profile.py")
 
+    elif page == "API Settings":
+        st.title("🔑 API Key Settings")
+        st.markdown("You can configure your API keys here. These are stored securely in session memory.")
+
+        openai_key = st.text_input("Enter OpenAI API Key", type="password", value=st.session_state.get("OPENAI_API_KEY", ""))
+        groq_key = st.text_input("Enter Groq API Key", type="password", value=st.session_state.get("GROQ_API_KEY", ""))
+
+        if st.button("💾 Save Keys"):
+            st.session_state["OPENAI_API_KEY"] = openai_key
+            st.session_state["GROQ_API_KEY"] = groq_key
+            os.environ["OPENAI_API_KEY"] = openai_key
+            os.environ["GROQ_API_KEY"] = groq_key
+            st.success("✅ API keys saved successfully!")
+
 else:
-    tab1, tab2 = st.tabs(["Login", "Sign Up"])
+    tab1, tab2 = st.tabs(["🔑 Login", "🆕 Sign Up"])
     with tab1:
         login_ui()
     with tab2:
         signup_ui()
-
