@@ -14,7 +14,7 @@ if "username" not in st.session_state:
 
 # --- LOGIN / SIGNUP UI ---
 def login_ui():
-    st.markdown("<h2 style='text-align:center;'>💰 FinWise — Login</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>💰 FinWise - Login</h2>", unsafe_allow_html=True)
     with st.form("login_form", clear_on_submit=False):
         user = st.text_input("Username")
         pwd = st.text_input("Password", type="password")
@@ -52,14 +52,45 @@ def logout():
 # --- Routing Logic ---
 if st.session_state.token and validate_session(st.session_state.token):
     st.sidebar.markdown(f"👤 **{st.session_state.username}**")
-    if st.sidebar.button("Logout"):
-        logout()
+    
+    # --- Navigation Menu ---
+    nav = st.sidebar.radio("FinWise", ["Home", "📊 Dashboard", "💬 Chatbot", "👤 Profile"], index=1)
     st.sidebar.markdown("---")
-    st.sidebar.success("Use the sidebar to navigate.")
-    st.switch_page("pages/1_Dashboard.py")
+
+    # --- API Key Input Section ---
+    st.sidebar.markdown("### 🔑 API Configuration")
+    openai_key = st.sidebar.text_input("OpenAI API Key", type="password")
+    groq_key = st.sidebar.text_input("Groq API Key", type="password")
+    if st.sidebar.button("Save Keys"):
+        if openai_key:
+            st.session_state["OPENAI_API_KEY"] = openai_key
+        if groq_key:
+            st.session_state["GROQ_API_KEY"] = groq_key
+        st.sidebar.success("✅ API keys saved for this session.")
+
+    st.sidebar.markdown("---")
+    if st.sidebar.button("🚪 Logout"):
+        logout()
+
+    # --- Navigation Handling ---
+    if nav == "Home":
+        st.title("💰 Welcome to FinWise")
+        st.markdown("""
+        ### Your AI-Powered Personal Financial Advisor  
+        Use the sidebar to navigate to the Dashboard, Chatbot, or Profile sections.  
+        FinWise helps you visualize your spending, understand financial habits, and get AI-generated insights.
+        """)
+    elif nav == "📊 Dashboard":
+        st.switch_page("pages/1_Dashboard.py")
+    elif nav == "💬 Chatbot":
+        st.switch_page("pages/2_Chatbot.py")
+    elif nav == "👤 Profile":
+        st.switch_page("pages/3_Profile.py")
+
 else:
-    tab1, tab2 = st.tabs(["🔑 Login", "🆕 Sign Up"])
+    tab1, tab2 = st.tabs(["Login", "Sign Up"])
     with tab1:
         login_ui()
     with tab2:
         signup_ui()
+
