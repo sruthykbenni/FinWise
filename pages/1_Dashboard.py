@@ -31,6 +31,18 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
+# --- Sidebar Navigation ---
+st.sidebar.title("🏠 Navigation")
+st.sidebar.page_link("app.py", label="Home", icon="🏠")
+st.sidebar.page_link("pages/1_Dashboard.py", label="Dashboard", icon="📊")
+st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot", icon="🤖")
+st.sidebar.page_link("pages/3_Profile.py", label="Profile", icon="👤")
+
+st.sidebar.markdown("---")
+st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
+st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
+
+
 # ---------------- Data Upload Section ----------------
 uploaded = st.file_uploader("📂 Upload your transaction CSV", type=["csv"])
 
