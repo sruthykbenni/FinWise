@@ -241,9 +241,4 @@ Licensed under the **MIT License** — free for personal, research, and educatio
 * [Streamlit](https://streamlit.io)
 * [Plotly](https://plotly.com/python/)
 
-```
-
 ---
-
-Would you like me to generate a **short GitHub project description (2–3 lines)** you can paste under the repository name too? It’ll make your repo stand out immediately when viewed.
-```
