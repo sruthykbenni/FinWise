@@ -9,6 +9,18 @@ st.set_page_config(page_title="FinWise Chatbot", page_icon="🤖", layout="wide"
 st.markdown("<h2 style='text-align:center;'>🤖 FinWise Chat Assistant</h2>", unsafe_allow_html=True)
 st.write("Ask me about your spending habits, budgets, or any transaction insights!")
 
+# --- Sidebar Navigation ---
+st.sidebar.title("🏠 Navigation")
+st.sidebar.page_link("app.py", label="Home", icon="🏠")
+st.sidebar.page_link("pages/1_Dashboard.py", label="Dashboard", icon="📊")
+st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot", icon="🤖")
+st.sidebar.page_link("pages/3_Profile.py", label="Profile", icon="👤")
+
+st.sidebar.markdown("---")
+st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
+st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
+
+
 # --- Load API Keys from session (fallback to .env if not set) ---
 if "OPENAI_API_KEY" in st.session_state and st.session_state["OPENAI_API_KEY"]:
     os.environ["OPENAI_API_KEY"] = st.session_state["OPENAI_API_KEY"]
