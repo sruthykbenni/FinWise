@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.session_manager import validate_session, get_user, clear_session
 
-st.set_page_config(page_title="Home — FinWise", page_icon="💰", layout="wide")
+st.set_page_config(page_title="FinWise Homepage", page_icon="💰", layout="wide")
 
 token = st.session_state.get("token")
 if not (token and validate_session(token)):
@@ -9,7 +9,7 @@ if not (token and validate_session(token)):
     st.stop()
 
 username = get_user(token)
-st.sidebar.success(f"Welcome, {username} 👋")
+st.sidebar.success(f"Welcome, {username}")
 
 # --- Sidebar Navigation ---
 
@@ -17,11 +17,11 @@ if st.sidebar.button("Logout"):
     clear_session()
     st.session_state.token = None
     st.session_state.username = None
-    st.success("✅ Logged out successfully!")
+    st.success("Logged out successfully!")
     st.rerun()
 
 # --- Main Content ---
-st.title("💰 Welcome to FinWise!")
+st.title("Welcome to FinWise!")
 st.markdown(f"""
 Hi **{username}**, welcome to **FinWise — your AI-powered personal financial advisor**.
 
