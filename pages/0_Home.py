@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.session_manager import validate_session, get_user, clear_session
 
-st.set_page_config(page_title="FinWise Homepage", page_icon="💰", layout="wide")
+st.set_page_config(page_title="FinWise Homepage", layout="wide")
 
 token = st.session_state.get("token")
 if not (token and validate_session(token)):
