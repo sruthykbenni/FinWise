@@ -19,26 +19,26 @@ if not (token and validate_session(token)):
     st.stop()
 
 username = get_user(token)
-st.sidebar.success(f"Welcome, {username} 👋")
+st.sidebar.success(f"Welcome, {username}")
 
-st.title("💰 Financial Dashboard")
+st.title("Financial Dashboard")
 
 st.markdown(f"""
 <div style='padding:15px;border-radius:10px;margin-bottom:20px;border:1px solid #ccc;'>
-<h4>👋 Welcome back, {username}!</h4>
+<h4>Welcome back, {username}!</h4>
 <p>Here’s an overview of your spending habits and AI-generated insights from your transactions.</p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # ---------------- Data Upload Section ----------------
-uploaded = st.file_uploader("📂 Upload your transaction CSV", type=["csv"])
+uploaded = st.file_uploader("Upload your transaction CSV", type=["csv"])
 
 if uploaded:
     df = load_transactions_from_csv(uploaded)
     df = normalize_and_categorize(df)
     st.session_state.df = df
-    st.success(f"✅ {len(df)} transactions loaded successfully.")
+    st.success(f"{len(df)} transactions loaded successfully.")
 else:
     # Load sample data if none uploaded
     if "df" not in st.session_state:
@@ -55,7 +55,7 @@ else:
                 })
             df = normalize_and_categorize(df)
             st.session_state.df = df
-            st.success("✅ Sample data loaded successfully.")
+            st.success("Sample data loaded successfully.")
 
 # ---------------- Dashboard Visualizations ----------------
 if "df" in st.session_state:
@@ -70,18 +70,18 @@ if "df" in st.session_state:
         cat = category_breakdown(df)
         st.plotly_chart(category_pie(cat), use_container_width=True)
 
-    st.subheader("🏪 Top Merchants")
+    st.subheader("Top Merchants")
     st.plotly_chart(top_merchants_bar(top_merchants(df, 10)), use_container_width=True)
 
     # ---------------- RAG Ingestion ----------------
-    st.subheader("🤖 Enable Personalized Chatbot Insights")
+    st.subheader("Enable Personalized Chatbot Insights")
 
     if st.button("Index My Transactions for Chatbot"):
         try:
             rag = get_rag_index()
             n = rag.ingest_transactions(df)
             if n > 0:
-                st.success(f"✅ {n} transaction summaries indexed successfully!")
+                st.success(f"{n} transaction summaries indexed successfully!")
                 st.info("Now visit the **Chatbot** page and ask personalized questions like:")
                 st.code("What were my biggest expenses last month?")
                 st.code("What are my top 3 spending categories?")
@@ -92,5 +92,5 @@ if "df" in st.session_state:
             st.error(f"⚠️ Indexing failed: {e}")
 
 else:
-    st.info("📈 Upload or load sample data to view analytics.")
+    st.info("Upload or load sample data to view analytics.")
 
