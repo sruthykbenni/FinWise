@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Dashboard: FinWise", layout="wide")
+st.set_page_config(page_title="Dashboard", layout="wide")
 
 # ---------------- Session Validation ----------------
 token = st.session_state.get("token")
