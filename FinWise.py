@@ -3,7 +3,7 @@ import streamlit as st
 from utils.auth import init_db, verify_user, create_user
 from utils.session_manager import create_session, validate_session, clear_session
 
-st.set_page_config(page_title="FinWise", page_icon="💰", layout="wide")
+st.set_page_config(page_title="FinWise", layout="wide")
 
 init_db()
 
