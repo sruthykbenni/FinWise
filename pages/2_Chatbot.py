@@ -6,12 +6,12 @@ from utils.rag_setup import get_rag_index
 
 st.set_page_config(page_title="FinWise Chatbot", layout="wide")
 
-st.markdown("<h2 style='text-align:center;'>🤖 FinWise Chat Assistant</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align:center;'>FinWise Chat Assistant</h2>", unsafe_allow_html=True)
 st.write("Ask me about your spending habits, budgets, or any transaction insights!")
 
-# 🔑 Optional API Key Inputs
-st.sidebar.text_input("🔑 OpenAI API Key", type="password", key="OPENAI_API_KEY")
-st.sidebar.text_input("🔑 Groq API Key", type="password", key="GROQ_API_KEY")
+# Optional API Key Inputs
+st.sidebar.text_input("OpenAI API Key", type="password", key="OPENAI_API_KEY")
+st.sidebar.text_input("Groq API Key", type="password", key="GROQ_API_KEY")
 
 # --- Load API Keys from session (fallback to .env if not set) ---
 if "OPENAI_API_KEY" in st.session_state and st.session_state["OPENAI_API_KEY"]:
@@ -60,9 +60,9 @@ if st.session_state.chat_history:
             st.markdown("---")
 
 # --- Sidebar Information ---
-st.sidebar.markdown("### 💡 FinWise AI Chatbot")
+st.sidebar.markdown("### FinWise AI Chatbot")
 st.sidebar.info(
     "FinWise uses your transaction history and embedded documents to answer "
     "personal finance questions. Ask me anything related to your spending, income, or budget!"
 )
-st.sidebar.markdown("✅ Powered by llama-3.1-8b-instant (with GPT-4 fallback)")
+st.sidebar.markdown("Powered by llama-3.1-8b-instant (with GPT-4 fallback)")
