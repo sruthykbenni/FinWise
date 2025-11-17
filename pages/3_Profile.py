@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="Profile: FinWise", layout="wide")
 
 # -------------------------------------------------------------
-# 🧾 Authentication
+#  Authentication
 # -------------------------------------------------------------
 token = st.session_state.get("token")
 if not (token and validate_session(token)):
@@ -21,7 +21,7 @@ st.title("👤 Profile & Reports")
 
 
 # -------------------------------------------------------------
-# 📊 Data Section
+#  Data Section
 # -------------------------------------------------------------
 if "df" not in st.session_state:
     st.info("Load your data from Dashboard first.")
@@ -33,13 +33,13 @@ else:
     st.write("### Category breakdown")
     st.table(cat)
     csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button("📥 Download CSV", csv, "transactions.csv", "text/csv")
+    st.download_button("Download CSV", csv, "transactions.csv", "text/csv")
 
     # -------------------------------------------------------------
-    # 📅 Monthly Income, Expense & Net Flow Overview
+    #  Monthly Income, Expense & Net Flow Overview
     # -------------------------------------------------------------
     st.markdown("---")
-    st.subheader("📆 Monthly Income & Expense Overview")
+    st.subheader(" Monthly Income & Expense Overview")
 
     # Ensure Date is datetime
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
@@ -50,7 +50,7 @@ else:
     month_df = df[df["Month"] == selected_month].copy()
 
     # --------------------------------------------------------------------
-    # 💰 Intelligent Income, Expense & Net Flow Detection (Advanced)
+    #  Intelligent Income, Expense & Net Flow Detection (Advanced)
     # --------------------------------------------------------------------
     month_df["Description"] = month_df["Description"].astype(str).str.lower()
     month_df["Category"] = month_df["Category"].astype(str).str.lower()
@@ -80,19 +80,19 @@ else:
 
 
     # -------------------------------------------------------------
-    # 📈 Display Metrics and Visualization
+    #  Display Metrics and Visualization
     # -------------------------------------------------------------
     col1, col2, col3 = st.columns(3)
-    col1.metric("💰 Income", f"₹{income:,.2f}")
-    col2.metric("💸 Expense", f"₹{abs(expense):,.2f}")
+    col1.metric("Income", f"₹{income:,.2f}")
+    col2.metric("Expense", f"₹{abs(expense):,.2f}")
     col3.metric(
-        "⚖️ Net Flow",
+        "Net Flow",
         f"₹{netflow:,.2f}",
         delta=f"{'+' if netflow >= 0 else ''}{netflow:,.2f}",
         delta_color="normal" if netflow >= 0 else "inverse",
     )
 
-    # 📊 Income vs Expense Bar Chart
+    #  Income vs Expense Bar Chart
     fig = go.Figure()
     fig.add_bar(name="Income", x=[selected_month], y=[income], marker_color="green")
     fig.add_bar(name="Expense", x=[selected_month], y=[abs(expense)], marker_color="red")
@@ -107,9 +107,9 @@ else:
     st.plotly_chart(fig, use_container_width=True)
 
     # -------------------------------------------------------------
-    # 🧭 Optional Net Flow Summary Table
+    #  Optional Net Flow Summary Table
     # -------------------------------------------------------------
-    st.markdown("### 🧾 Summary for Selected Month")
+    st.markdown("### Summary for Selected Month")
     summary_df = pd.DataFrame({
         "Metric": ["Income", "Expense", "Net Flow"],
         "Amount (₹)": [f"{income:,.2f}", f"{abs(expense):,.2f}", f"{netflow:,.2f}"]
