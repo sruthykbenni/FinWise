@@ -14,7 +14,7 @@ if "username" not in st.session_state:
 
 # --- LOGIN / SIGNUP UI ---
 def login_ui():
-    st.markdown("<h2 style='text-align:center;'>💰 FinWise: Login</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>FinWise: Login</h2>", unsafe_allow_html=True)
     with st.form("login_form", clear_on_submit=False):
         user = st.text_input("Username")
         pwd = st.text_input("Password", type="password")
@@ -24,7 +24,7 @@ def login_ui():
                 token = create_session(user)
                 st.session_state.username = user
                 st.session_state.token = token
-                st.success("✅ Logged in successfully!")
+                st.success("Logged in successfully!")
                 st.rerun()
             else:
                 st.error("Invalid username or password")
@@ -57,11 +57,11 @@ if st.session_state.token and validate_session(st.session_state.token):
 
 
     # Navigation Links
-    st.sidebar.title("🏠 Navigation")
-    st.sidebar.page_link("pages/0_Home.py", label="Home", icon="🏠")
-    st.sidebar.page_link("pages/1_Dashboard.py", label="Dashboard", icon="📊")
-    st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot", icon="🤖")
-    st.sidebar.page_link("pages/3_Profile.py", label="Profile", icon="👤")
+    st.sidebar.title("Navigation")
+    st.sidebar.page_link("pages/0_Home.py", label="Home")
+    st.sidebar.page_link("pages/1_Dashboard.py", label="Dashboard")
+    st.sidebar.page_link("pages/2_Chatbot.py", label="Chatbot")
+    st.sidebar.page_link("pages/3_Profile.py", label="Profile")
 
     if st.sidebar.button("Logout"):
         logout()
